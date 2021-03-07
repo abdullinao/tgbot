@@ -28,6 +28,15 @@ public class user {
     public user() {
     }
 
+    public String toString() {
+
+        return "id = " + this.id
+                + " name = " + this.userFullName
+                + " login=" + this.userLogin
+                + " rep = " + this.reputation;
+    }
+
+
     public int getId() {
         return id;
     }
@@ -59,4 +68,6 @@ public class user {
     public void setUserLogin(String userLogin) {
         this.userLogin = userLogin;
     }
+
+
 }

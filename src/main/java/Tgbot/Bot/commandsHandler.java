@@ -55,7 +55,7 @@ public class commandsHandler {
         String callAll = "";
 
         for (user allUser : allUsers) {
-          callAll += "@" + allUser.getUserLogin() + " ";
+            callAll += "@" + allUser.getUserLogin() + " ";
 //              if (!allUser.getUserLogin().equals("")) {
 //                  callAll += "@" + allUser.getId() + " ";
 //              } else {
@@ -65,12 +65,53 @@ public class commandsHandler {
         return callAll;
     }
 
-    public void plusRepCommand(Message msg){
-        System.out.println(msg.getFrom());
+    /**
+     * modificationType - тип изменения репы
+     * 0-понижение
+     * 1-увеличение
+     **/
 
-        System.out.println(msg.getForwardFrom());
-        System.out.println(msg);
-        System.out.println(msg);
+    public String plusRepCommand(Message msg, int modificationType) {
+
+
+        user userToModify = new user();
+        user userThatMadeChanges = new user();
+
+
+
+        if (!msg.getReplyToMessage().getFrom().getUserName().equals("KDq3CVM43w_bot"))//todo имя бота должно подтягиваться из конфига
+        {
+            userToModify = userService.findById(msg.getReplyToMessage().getFrom().getId());
+            userThatMadeChanges = userService.findById(msg.getFrom().getId());
+
+            if (userToModify.getId()==userThatMadeChanges.getId()){
+                return "нельзя изменять реп себе";
+            }
+
+            if (modificationType == 1) {
+                userToModify.setReputation(userToModify.getReputation() + 1);
+
+                userService.update(userToModify);
+                return userThatMadeChanges.getUserFullName() + "(" + userThatMadeChanges.getUserLogin() + ")"
+                        + " прибавил реп пользователю "
+                        + userToModify.getUserFullName() + "(" + userToModify.getUserLogin() + ")";
+
+            } else {
+                userToModify.setReputation(userToModify.getReputation() - 1);
+                userService.update(userToModify);
+                return userThatMadeChanges.getUserFullName() + "(" + userThatMadeChanges.getUserLogin() + ")"
+                        + " понизил реп пользователю "
+                        + userToModify.getUserFullName() + "(" + userToModify.getUserLogin() + ")";
+            }
+
+
+        } else {
+            return  "Мне нельзя повысить репутацию.";
+        }
+
+        // System.out.println(msg.getReplyToMessage().getFrom().getId()); //916448783
+
     }
+
 
 }

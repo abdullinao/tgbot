@@ -43,6 +43,7 @@ public class bot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         try {
             Message message = update.getMessage();
+
             /*бот работает только в 1 чате, по-этому дополнительно проверяем что чатайди = заданому чат айди. */
             if (message != null && message.hasText() && String.valueOf(message.getChatId()).equals(chatId)) {
                 checkUserInBD(message);
@@ -57,18 +58,24 @@ public class bot extends TelegramLongPollingBot {
                         case "/all":
                             sendMsg(message, commandsHandler.allCommand());
                             break;
-                        case "плюс реп" :
-                            commandsHandler.plusRepCommand(message);
+                        case "плюс реп":
+                            sendMsg(message, commandsHandler.plusRepCommand(message, 1));
+                            break;
+                        case "минус реп":
+                            sendMsg(message, commandsHandler.plusRepCommand(message, 0));
+                            break;
                     }
 
                 } catch (Exception e) {
-                    System.out.println("errorss " + e);
+                    System.out.println("switch ");
+                    e.printStackTrace();
                 }
             } else {
                 sendMsg(message, UTILwrongChat);
             }
         } catch (Exception e) {
-            System.out.println("error " + e);
+            System.out.println("onUpdateReceived ");
+            e.printStackTrace();
         }
         // We check if the update has a message and the message has text
 //        if (update.hasMessage() && update.getMessage().hasText()) {
