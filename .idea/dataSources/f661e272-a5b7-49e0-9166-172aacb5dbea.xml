@@ -784,7 +784,7 @@ false YEKT
 false Z
 false Zulu
 </TimeZones>
-      <StartupTime>1615101087</StartupTime>
+      <StartupTime>1615139797</StartupTime>
     </root>
     <database id="2" parent="1" name="123">
       <ObjectId>16400</ObjectId>
@@ -794,12 +794,11 @@ false Zulu
       <ObjectId>13442</ObjectId>
       <Comment>default administrative connection database</Comment>
       <Owner>postgres</Owner>
-      <IntrospectionStateNumber>677</IntrospectionStateNumber>
     </database>
     <database id="4" parent="1" name="tgbot">
       <ObjectId>24594</ObjectId>
       <Owner>postgres</Owner>
-      <IntrospectionStateNumber>690</IntrospectionStateNumber>
+      <IntrospectionStateNumber>749</IntrospectionStateNumber>
       <Current>1</Current>
     </database>
     <role id="5" parent="1" name="pg_execute_server_program">
@@ -870,7 +869,7 @@ UC/10
 </Acl>
       <StateNumber>287</StateNumber>
       <Owner>postgres</Owner>
-      <IntrospectionStateNumber>691</IntrospectionStateNumber>
+      <IntrospectionStateNumber>750</IntrospectionStateNumber>
       <Current>1</Current>
     </schema>
     <extension id="19" parent="4" name="plpgsql">
@@ -971,27 +970,51 @@ UC/10
       <Type>index</Type>
     </access-method>
     <table id="31" parent="18" name="users">
-      <ObjectId>24595</ObjectId>
+      <ObjectId>24671</ObjectId>
       <Owner>postgres</Owner>
-      <StateNumber>681</StateNumber>
+      <StateNumber>747</StateNumber>
     </table>
     <column id="32" parent="31" name="id">
       <Position>1</Position>
       <DataType>integer|0s</DataType>
-      <StateNumber>681</StateNumber>
+      <NotNull>1</NotNull>
+      <StateNumber>747</StateNumber>
       <TypeId>23</TypeId>
     </column>
-    <column id="33" parent="31" name="name">
+    <column id="33" parent="31" name="rep">
       <Position>2</Position>
-      <DataType>varchar|0s</DataType>
-      <StateNumber>681</StateNumber>
+      <DataType>integer|0s</DataType>
+      <StateNumber>747</StateNumber>
+      <TypeId>23</TypeId>
+    </column>
+    <column id="34" parent="31" name="name">
+      <Position>3</Position>
+      <DataType>varchar(255)|0s</DataType>
+      <StateNumber>747</StateNumber>
       <TypeId>1043</TypeId>
     </column>
-    <column id="34" parent="31" name="rep">
-      <Position>3</Position>
-      <DataType>integer|0s</DataType>
-      <StateNumber>681</StateNumber>
-      <TypeId>23</TypeId>
+    <column id="35" parent="31" name="login">
+      <Position>4</Position>
+      <DataType>varchar(255)|0s</DataType>
+      <StateNumber>747</StateNumber>
+      <TypeId>1043</TypeId>
     </column>
+    <index id="36" parent="31" name="users_pkey">
+      <ObjectId>24677</ObjectId>
+      <StateNumber>747</StateNumber>
+      <ColNames>id</ColNames>
+      <Unique>1</Unique>
+      <Primary>1</Primary>
+      <AccessMethodId>403</AccessMethodId>
+      <CollationIds>0</CollationIds>
+      <ClassIds>1978</ClassIds>
+    </index>
+    <key id="37" parent="31" name="users_pkey">
+      <ObjectId>24678</ObjectId>
+      <StateNumber>747</StateNumber>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>users_pkey</UnderlyingIndexName>
+    </key>
   </database-model>
 </dataSource>

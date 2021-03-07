@@ -36,6 +36,13 @@ public class userService {
 //        fdaoc.closeCurrentSessionwithTransaction();
 //    }
 
+    public void persist(user user) {
+        userDAO.openCurrentSessionwithTransaction();
+
+        userDAO.persist(user);
+        userDAO.closeCurrentSessionwithTransaction();
+    }
+
     public ArrayList<user> findAll() {
         userDAO.openCurrentSession();
         ArrayList<user> users = userDAO.findAll();

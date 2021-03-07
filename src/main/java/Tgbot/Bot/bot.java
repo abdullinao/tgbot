@@ -2,27 +2,39 @@ package Tgbot.Bot;
 
 
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.ActionType;
+import org.telegram.telegrambots.meta.api.methods.send.SendChatAction;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import Tgbot.Bot.commandsUtils.*;
 
-import static Tgbot.Bot.commandsHandler.*;
+import static Tgbot.Bot.commandsUtils.UTILwrongChat;
 
+//@Component //todo это должно инцииализировать дота срингом
 public class bot extends TelegramLongPollingBot {
 
+    //@Override
+    // public String getBotUsername() {
+    // return "springtgbottest66699";
+    //  }
+//@Override
+    //public String getBotToken() {
+    //     return "1624746692:AAHslRVLgRHzdv_J8TaYLFhWhRxdkHW_3io";
+    //  }
     @Override
     public String getBotUsername() {
-        return "springtgbottest66699";
+        return "KDq3CVM43w_bot";
     }
 
     @Override
+
     public String getBotToken() {
-        return "1624746692:AAHslRVLgRHzdv_J8TaYLFhWhRxdkHW_3io";
+        return "916448783:AAEmLGLVEs0vrFm6Ke-Y2949O5fYD6nnYW8";
     }
 
     private static commandsHandler commandsHandler = new commandsHandler();
+    private static textHandler textHandler = new textHandler();
     //https://core.telegram.org/bots/api#update
 
     private String chatId = "-278344922";//todo вынести чат айди и прочие параметра в отдельный конфиг файл
@@ -32,22 +44,28 @@ public class bot extends TelegramLongPollingBot {
         try {
             Message message = update.getMessage();
             /*бот работает только в 1 чате, по-этому дополнительно проверяем что чатайди = заданому чат айди. */
-            if (message != null && message.hasText()/* && String.valueOf(message.getChatId()).equals(chatId) */) {
+            if (message != null && message.hasText() && String.valueOf(message.getChatId()).equals(chatId)) {
+                checkUserInBD(message);
                 try {
                     switch (message.getText()) {
                         case "/help":
-                            sendMsg(message, commandsUtils.helpText);
+                            sendMsg(message, commandsUtils.UTILhelpText);
                             break;
                         case "/top":
                             sendMsg(message, commandsHandler.topCommand());
                             break;
+                        case "/all":
+                            sendMsg(message, commandsHandler.allCommand());
+                            break;
+                        case "плюс реп" :
+                            commandsHandler.plusRepCommand(message);
                     }
 
                 } catch (Exception e) {
                     System.out.println("errorss " + e);
                 }
             } else {
-                sendMsg(message, "error, this chat cant be used with this bot");
+                sendMsg(message, UTILwrongChat);
             }
         } catch (Exception e) {
             System.out.println("error " + e);
@@ -67,15 +85,35 @@ public class bot extends TelegramLongPollingBot {
 
     public void sendMsg(Message msg, String text) {
 
+        SendChatAction sendChatAction = new SendChatAction();
+        sendChatAction.setAction(ActionType.TYPING);
+        sendChatAction.setChatId(String.valueOf(msg.getChatId()));
+
         SendMessage message2Send = new SendMessage();
 
         message2Send.setChatId(String.valueOf(msg.getChatId()));
         message2Send.setText(text);
         try {
+            execute(sendChatAction); //делает вид что печатает
             execute(message2Send); //sending
+
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
     }
 
+    //собирает инфу о отправителе сообщения
+    public static void checkUserInBD(Message msg) {
+        int userIdFrom = msg.getFrom().getId();
+        String userNameFrom = msg.getFrom().getFirstName();
+        String userLastNameFrom = msg.getFrom().getLastName();
+        String userLoginFrom = msg.getFrom().getUserName();
+//создает пользователя в бд если его там нет
+        try {
+            textHandler.analyzeIfUserInDB(userIdFrom, userNameFrom, userLastNameFrom, userLoginFrom);
+        } catch (Exception e) {
+            System.out.println("ошибка в методе checkUserInBD");
+            e.printStackTrace();
+        }
+    }
 }

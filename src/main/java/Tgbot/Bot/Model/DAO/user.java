@@ -6,18 +6,21 @@ import javax.persistence.*;
 @Table(name = "users", schema = "public")
 public class user {
     /*
-    CREATE TABLE IF NOT EXISTS  users
-    (
-        id int,
-        name varchar,
-        rep int
-    );
+  create table users
+(
+    id   integer not null,
+    name varchar,
+    rep  integer
+);
     */
     @Id
     int id;
 
     @Column(name = "name")
-    String user;
+    String userFullName;
+
+    @Column(name = "login")
+    String userLogin;
 
     @Column(name = "rep")
     int reputation;
@@ -33,12 +36,12 @@ public class user {
         this.id = id;
     }
 
-    public String getUser() {
-        return user;
+    public String getUserFullName() {
+        return userFullName;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setUserFullName(String user) {
+        this.userFullName = user;
     }
 
     public int getReputation() {
@@ -47,5 +50,13 @@ public class user {
 
     public void setReputation(int reputation) {
         this.reputation = reputation;
+    }
+
+    public String getUserLogin() {
+        return userLogin;
+    }
+
+    public void setUserLogin(String userLogin) {
+        this.userLogin = userLogin;
     }
 }
