@@ -18,7 +18,7 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import javax.annotation.PostConstruct;
 
 import static Tgbot.Bot.Utils.commandsUtils.UTILwrongChat;
-
+//@Slf4j
 @Service
 public class bot extends TelegramLongPollingBot {
 
