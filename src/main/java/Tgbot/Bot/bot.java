@@ -1,7 +1,9 @@
 package Tgbot.Bot;
 
 
-import org.springframework.stereotype.Component;
+import Tgbot.Bot.Handlers.commandsHandler;
+import Tgbot.Bot.Utils.commandsUtils;
+import Tgbot.Bot.Handlers.textHandler;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.ActionType;
@@ -11,7 +13,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import static Tgbot.Bot.commandsUtils.UTILwrongChat;
+import static Tgbot.Bot.Utils.commandsUtils.UTILwrongChat;
 
 @Service //todo это должно инцииализировать дота срингом
 public class bot extends TelegramLongPollingBot {
@@ -35,8 +37,8 @@ public class bot extends TelegramLongPollingBot {
         return "916448783:AAEmLGLVEs0vrFm6Ke-Y2949O5fYD6nnYW8";
     }
 
-    private static commandsHandler commandsHandler = new commandsHandler();
-    private static textHandler textHandler = new textHandler();
+    private static Tgbot.Bot.Handlers.commandsHandler commandsHandler = new commandsHandler();
+    private static Tgbot.Bot.Handlers.textHandler textHandler = new textHandler();
     //https://core.telegram.org/bots/api#update
 
     private String chatId = "-278344922";//todo вынести чат айди и прочие параметра в отдельный конфиг файл

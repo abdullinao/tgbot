@@ -1,4 +1,4 @@
-package Tgbot.Bot;
+package Tgbot.Bot.Utils;
 
 public class commandsUtils {
     //text that sends when /help command used

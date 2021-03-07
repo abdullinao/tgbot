@@ -1,4 +1,4 @@
-package Tgbot.Bot;
+package Tgbot.Bot.Handlers;
 
 import Tgbot.Bot.Model.DAO.user;
 import Tgbot.Bot.Model.DAO.userService;

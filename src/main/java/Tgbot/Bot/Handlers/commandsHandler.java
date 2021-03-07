@@ -1,9 +1,9 @@
-package Tgbot.Bot;
+package Tgbot.Bot.Handlers;
 
 import Tgbot.Bot.Model.DAO.user;
 import Tgbot.Bot.Model.DAO.userService;
+import Tgbot.Bot.Utils.commandsUtils;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.ArrayList;
 
