@@ -71,7 +71,7 @@ public class commandsHandler {
      * 1-увеличение
      **/
 
-    public String plusRepCommand(Message msg, int modificationType) {
+    public String changeRepCommand(Message msg, int modificationType) {
 
 
         user userToModify = new user();

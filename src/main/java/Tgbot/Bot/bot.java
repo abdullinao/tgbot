@@ -1,6 +1,8 @@
 package Tgbot.Bot;
 
 
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.ActionType;
 import org.telegram.telegrambots.meta.api.methods.send.SendChatAction;
@@ -11,7 +13,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import static Tgbot.Bot.commandsUtils.UTILwrongChat;
 
-//@Component //todo это должно инцииализировать дота срингом
+@Service //todo это должно инцииализировать дота срингом
 public class bot extends TelegramLongPollingBot {
 
     //@Override
@@ -59,10 +61,10 @@ public class bot extends TelegramLongPollingBot {
                             sendMsg(message, commandsHandler.allCommand());
                             break;
                         case "плюс реп":
-                            sendMsg(message, commandsHandler.plusRepCommand(message, 1));
+                            sendMsg(message, commandsHandler.changeRepCommand(message, 1));
                             break;
                         case "минус реп":
-                            sendMsg(message, commandsHandler.plusRepCommand(message, 0));
+                            sendMsg(message, commandsHandler.changeRepCommand(message, 0));
                             break;
                     }
 
