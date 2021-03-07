@@ -6,16 +6,20 @@ import Tgbot.Bot.Utils.commandsUtils;
 import Tgbot.Bot.Handlers.textHandler;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.ActionType;
 import org.telegram.telegrambots.meta.api.methods.send.SendChatAction;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
+
+import javax.annotation.PostConstruct;
 
 import static Tgbot.Bot.Utils.commandsUtils.UTILwrongChat;
 
-@Service //todo это должно инцииализировать дота срингом
+@Service
 public class bot extends TelegramLongPollingBot {
 
     //@Override
@@ -42,6 +46,17 @@ public class bot extends TelegramLongPollingBot {
     //https://core.telegram.org/bots/api#update
 
     private String chatId = "-278344922";//todo вынести чат айди и прочие параметра в отдельный конфиг файл
+
+    @PostConstruct
+    public void registerBot(){
+
+        try {
+            TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
+            botsApi.registerBot(new bot());
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public void onUpdateReceived(Update update) {
