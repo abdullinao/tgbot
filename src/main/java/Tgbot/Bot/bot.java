@@ -19,6 +19,7 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 
 import java.util.Locale;
@@ -87,7 +88,7 @@ public class bot extends TelegramLongPollingBot {
                         logger.debug("/top execution completed");
                     } else if (incomeMessage.equals("/all")) {
                         logger.debug("/all command execution");
-                        sendMsg(message, commandsHandler.allCommand());
+                        sendMsg(message, commandsHandler.allCommand(), "HTML");
                         logger.debug("/all execution completed");
                     } else if (incomeMessage.contains("плюс реп")) {
                         logger.debug("плюс реп command execution");
@@ -121,7 +122,9 @@ public class bot extends TelegramLongPollingBot {
         }
     }
 
-    public void sendMsg(Message msg, String text) {
+//<a href="tg://user?id=123456789">inline mention of a user</a>
+
+    public void sendMsg(Message msg, String text, String... method) {
         logger.debug("message sending invoked");
         SendChatAction sendChatAction = new SendChatAction();
         sendChatAction.setAction(ActionType.TYPING);
@@ -130,12 +133,17 @@ public class bot extends TelegramLongPollingBot {
         SendMessage message2Send = new SendMessage();
         message2Send.setChatId(String.valueOf(msg.getChatId()));
         message2Send.setText(text);
-        logger.debug("message to send: {}", message2Send);
+        message2Send.setReplyToMessageId(msg.getMessageId());
         try {
             logger.debug("executing typing emulation...");
             execute(sendChatAction); //делает вид что печатает
+            if (method != null) {
+                message2Send.setParseMode("HTML");
+            }
+            logger.debug("message to send: {}", message2Send);
             logger.debug("executing sending...");
-            execute(message2Send); //sending
+
+            execute(message2Send);
             logger.debug("sending message completed successfully");
         } catch (TelegramApiException e) {
             logger.error("error in message sending: ", e);

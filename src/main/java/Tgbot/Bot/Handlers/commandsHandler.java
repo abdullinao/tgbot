@@ -69,6 +69,9 @@ public class commandsHandler {
             if (allUser.getUserLogin() != null) {
                 logger.debug("adding to message user: {}", allUser.getUserLogin());
                 callAll += "@" + allUser.getUserLogin() + " ";
+            } else {
+                logger.debug("adding to message user w/o login: {}, {}", allUser.getId(), allUser.getUserFullName());
+                callAll += "<a href=\"tg://user?id=" + allUser.getId() + "\">" + allUser.getUserFullName() + "</a>" + " ";
             }
         }
         logger.info("/all finished");
@@ -86,44 +89,48 @@ public class commandsHandler {
         user userToModify;
         user userThatMadeChanges;
 
-        if (!msg.getReplyToMessage().getFrom().getIsBot()) {
-
-            logger.debug("selecting user to modify reputation with id: {}", msg.getReplyToMessage().getFrom().getId());
-            userToModify = userService.findById(msg.getReplyToMessage().getFrom().getId());
-            logger.debug("found user: {}", userToModify);
-            logger.debug("selecting user that modify reputation with id: {}", msg.getFrom().getId());
-            userThatMadeChanges = userService.findById(msg.getFrom().getId());
-            logger.debug("found user: {}", userThatMadeChanges);
-
-            if (userToModify.getId() == userThatMadeChanges.getId()) {
-                logger.debug("there was attempt to self rep change");
-                return "нельзя изменять реп себе";
-            }
-
-            if (modificationType == 1) {
-                logger.info("increasing reputation to user: {}", userToModify);
-                userToModify.setReputation(userToModify.getReputation() + 1);
-                logger.debug("updating user in DB...");
-                userService.update(userToModify);
-                logger.info("reputation increasing completed");
-                return userThatMadeChanges.getUserFullName() + "(" + userThatMadeChanges.getUserLogin() + ")"
-                        + " прибавил реп пользователю "
-                        + userToModify.getUserFullName() + "(" + userToModify.getUserLogin() + ")";
-
-            } else {
-                logger.info("decreasing reputation to user: {}", userToModify);
-                userToModify.setReputation(userToModify.getReputation() - 1);
-                logger.debug("updating user in DB...");
-                userService.update(userToModify);
-                logger.info("reputation decreasing completed");
-                return userThatMadeChanges.getUserFullName() + "(" + userThatMadeChanges.getUserLogin() + ")"
-                        + " понизил реп пользователю "
-                        + userToModify.getUserFullName() + "(" + userToModify.getUserLogin() + ")";
-            }
-        } else {
+        if (msg.getReplyToMessage().getFrom().getIsBot()) {
             logger.debug("there was attempt to change reputation to a BOT");
             return "Нельзя менять репутацию боту.";
         }
+
+        logger.debug("selecting user to modify reputation with id: {}", msg.getReplyToMessage().getFrom().getId());
+        userToModify = userService.findById(msg.getReplyToMessage().getFrom().getId());
+        logger.debug("found user: {}", userToModify);
+        logger.debug("selecting user that modify reputation with id: {}", msg.getFrom().getId());
+        userThatMadeChanges = userService.findById(msg.getFrom().getId());
+        logger.debug("found user: {}", userThatMadeChanges);
+
+        if (userToModify==null) {
+            return "пользователя нет в бд";
+        }
+
+        if (userToModify.getId() == userThatMadeChanges.getId()) {
+            logger.debug("there was attempt to self rep change");
+            return "нельзя изменять реп себе";
+        }
+
+        if (modificationType == 1) {
+            logger.info("increasing reputation to user: {}", userToModify);
+            userToModify.setReputation(userToModify.getReputation() + 1);
+            logger.debug("updating user in DB...");
+            userService.update(userToModify);
+            logger.info("reputation increasing completed");
+            return userThatMadeChanges.getUserFullName() + "(" + userThatMadeChanges.getUserLogin() + ")"
+                    + " прибавил реп пользователю "
+                    + userToModify.getUserFullName() + "(" + userToModify.getUserLogin() + ")";
+
+        } else   {
+            logger.info("decreasing reputation to user: {}", userToModify);
+            userToModify.setReputation(userToModify.getReputation() - 1);
+            logger.debug("updating user in DB...");
+            userService.update(userToModify);
+            logger.info("reputation decreasing completed");
+            return userThatMadeChanges.getUserFullName() + "(" + userThatMadeChanges.getUserLogin() + ")"
+                    + " понизил реп пользователю "
+                    + userToModify.getUserFullName() + "(" + userToModify.getUserLogin() + ")";
+        }
+
 
         // System.out.println(msg.getReplyToMessage().getFrom().getId()); //916448783
 
