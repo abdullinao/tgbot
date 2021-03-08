@@ -60,6 +60,8 @@ public class textHandler {
                 logger.error("error while updating user in bd: ", e);
             }
 
+        } else {
+            logger.debug("user profile wasnt changed or something goes wrong");
         }
 
     }

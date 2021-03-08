@@ -73,7 +73,6 @@ public class bot extends TelegramLongPollingBot {
                 logger.debug("first IF in onUpdateReceived method passed");
                 logger.debug("starting checkUserInBD(message) method");
                 checkUserInBD(message);
-                logger.debug("checkUserInBD(message) completed");
                 try {
                     String incomeMessage = message.getText().toLowerCase(Locale.ROOT);
                     if (incomeMessage.equals("/help")) {
