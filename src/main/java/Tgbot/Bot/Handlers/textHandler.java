@@ -1,7 +1,7 @@
 package Tgbot.Bot.Handlers;
 
-import Tgbot.Bot.Model.DAO.user;
-import Tgbot.Bot.Model.DAO.userService;
+import Tgbot.Bot.Model.userDAO.user;
+import Tgbot.Bot.Model.userDAO.userService;
 
 public class textHandler {
 

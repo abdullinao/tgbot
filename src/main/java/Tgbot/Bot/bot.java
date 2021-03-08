@@ -17,7 +17,10 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 import javax.annotation.PostConstruct;
 
+import java.util.Locale;
+
 import static Tgbot.Bot.Utils.commandsUtils.UTILwrongChat;
+
 //@Slf4j
 @Service
 public class bot extends TelegramLongPollingBot {
@@ -48,7 +51,7 @@ public class bot extends TelegramLongPollingBot {
     private String chatId = "-278344922";//todo вынести чат айди и прочие параметра в отдельный конфиг файл
 
     @PostConstruct
-    public void registerBot(){
+    public void registerBot() {
 
         try {
             TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
@@ -67,26 +70,59 @@ public class bot extends TelegramLongPollingBot {
             if (message != null && message.hasText() && String.valueOf(message.getChatId()).equals(chatId)) {
                 checkUserInBD(message);
                 try {
-                    switch (message.getText()) {
-                        case "/help":
-                            sendMsg(message, commandsUtils.UTILhelpText);
-                            break;
-                        case "/top":
-                            sendMsg(message, commandsHandler.topCommand());
-                            break;
-                        case "/all":
-                            sendMsg(message, commandsHandler.allCommand());
-                            break;
-                        case "плюс реп":
-                            sendMsg(message, commandsHandler.changeRepCommand(message, 1));
-                            break;
-                        case "минус реп":
-                            sendMsg(message, commandsHandler.changeRepCommand(message, 0));
-                            break;
+                    String incomeMessage = message.getText().toLowerCase(Locale.ROOT);
+                    if (incomeMessage.equals("/help")) {
+
+                        sendMsg(message, commandsUtils.UTILhelpText);
+
+                    } else if (incomeMessage.equals("/top")) {
+
+                        sendMsg(message, commandsHandler.topCommand());
+
+                    } else if (incomeMessage.equals("/all")) {
+
+                        sendMsg(message, commandsHandler.allCommand());
+
+                    } else if (incomeMessage.contains("плюс реп")) {
+
+                        sendMsg(message, commandsHandler.changeRepCommand(message, 1));
+
+                    } else if (incomeMessage.contains("минус реп")) {
+
+                        sendMsg(message, commandsHandler.changeRepCommand(message, 0));
                     }
+//                    else if (incomeMessage.equals("/погода")) {
+//
+//                        sendMsg(message, commandsHandler.getWeather());
+//
+//                    }
+                    else if (incomeMessage.equals("/курс")) {
+
+                         sendMsg(message, commandsHandler.getCourse());
+
+                     }
+
+//
+//                    switch (message.getText()) {
+//                        case "/help":
+//                            sendMsg(message, commandsUtils.UTILhelpText);
+//                            break;
+//                        case "/top":
+//                            sendMsg(message, commandsHandler.topCommand());
+//                            break;
+//                        case "/all":
+//                            sendMsg(message, commandsHandler.allCommand());
+//                            break;
+//                        case "плюс реп":
+//                            sendMsg(message, commandsHandler.changeRepCommand(message, 1));
+//                            break;
+//                        case "минус реп":
+//                            sendMsg(message, commandsHandler.changeRepCommand(message, 0));
+//                            break;
+//                    }
 
                 } catch (Exception e) {
-                    System.out.println("switch ");
+                    System.out.println("commands choser ");
                     e.printStackTrace();
                 }
             } else {

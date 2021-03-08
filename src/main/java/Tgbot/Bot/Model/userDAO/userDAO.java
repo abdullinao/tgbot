@@ -1,4 +1,4 @@
-package Tgbot.Bot.Model.DAO;
+package Tgbot.Bot.Model.userDAO;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
