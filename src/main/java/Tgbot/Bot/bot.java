@@ -25,33 +25,35 @@ import static Tgbot.Bot.Utils.commandsUtils.UTILwrongChat;
 
 @Service
 public class bot extends TelegramLongPollingBot {
+//todo бины в xml
+    //todo погода
+    //todo какие-нибудь уведомления тпиа манги или нового аниме
+    //
 
+    private final String chatId ;
+    private final String botToken;
+    private final String botName;
 
-//    @Value("${bot.name}")
-//    private String botName;
-//    @Value("${bot.token}")
-//    private String botToken;
-//    @Value("${bot.chatId}")
-//    private String chatId;
+    public bot(@Value("${bot.token}") String botToken,  @Value("${bot.name}") String botName,
+    @Value("${bot.chatId}") String chatId)  {
+        this.botToken = botToken;
+        this.botName=botName;
+        this.chatId=chatId;
+    }
 
-    private String chatId = "-278344922";
- 
-    private String botToken  = "916448783:AAGh7y38LVJROzuWneekUYXr59najQdQzdc";
-    private String botName = "KDq3CVM43w_bot";
 
 
     private static Tgbot.Bot.Handlers.commandsHandler commandsHandler = new commandsHandler();
     private static Tgbot.Bot.Handlers.textHandler textHandler = new textHandler();
+
     //https://core.telegram.org/bots/api#update
 
     @PostConstruct
     public void registerBot() {
 
-        System.out.println("bot id " + botName);
-        System.out.println("bot token " + botToken);
         try {
             TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
-            botsApi.registerBot(new bot());
+            botsApi.registerBot(new bot(botToken,botName,chatId));
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
@@ -109,6 +111,7 @@ public class bot extends TelegramLongPollingBot {
         } catch (Exception e) {
             System.out.println("onUpdateReceived ");
             e.printStackTrace();
+
         }
     }
 
@@ -131,15 +134,12 @@ public class bot extends TelegramLongPollingBot {
         }
     }
 
-    //собирает инфу о отправителе сообщения
+
     public static void checkUserInBD(Message msg) {
-        int userIdFrom = msg.getFrom().getId();
-        String userNameFrom = msg.getFrom().getFirstName();
-        String userLastNameFrom = msg.getFrom().getLastName();
-        String userLoginFrom = msg.getFrom().getUserName();
-//создает пользователя в бд если его там нет
+//проверка пользователя на существование в бд\ изменеия логина\фио
         try {
-            textHandler.analyzeIfUserInDB(userIdFrom, userNameFrom, userLastNameFrom, userLoginFrom);
+            textHandler.analyzeIfUserInDB(msg.getFrom().getId(), msg.getFrom().getFirstName(),
+                    msg.getFrom().getLastName(), msg.getFrom().getUserName());
         } catch (Exception e) {
             System.out.println("ошибка в методе checkUserInBD");
             e.printStackTrace();

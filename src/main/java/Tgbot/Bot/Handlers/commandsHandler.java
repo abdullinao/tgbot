@@ -5,6 +5,7 @@ import Tgbot.Bot.Model.oldMoney;
 import Tgbot.Bot.Model.userDAO.user;
 import Tgbot.Bot.Model.userDAO.userService;
 import Tgbot.Bot.Utils.commandsUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import com.google.gson.Gson;
 
@@ -15,6 +16,9 @@ import java.util.ArrayList;
 import Tgbot.Bot.Model.crypto;
 
 public class commandsHandler {
+    @Value("${crypro.cryptocompareKey}")
+    private String cryptoKey ;
+
     userService userService = new userService();
 
     public String topCommand() {
@@ -36,7 +40,6 @@ public class commandsHandler {
             }
             return "топ пользователей по репутации: \n" + topText;
         }
-
         return commandsUtils.UTILnoUsersText;
     }
 
@@ -96,8 +99,6 @@ public class commandsHandler {
                         + " понизил реп пользователю "
                         + userToModify.getUserFullName() + "(" + userToModify.getUserLogin() + ")";
             }
-
-
         } else {
             return "Нельзя менять репутацию боту.";
         }
@@ -111,16 +112,17 @@ public class commandsHandler {
 //        https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,ETH&tsyms=USD,RUB&api_key=1437b60bf3857dbcd682b5049a2b1c4fe31956b03bebcd28587086c77ec8870f
 //URL cryptoUrl = new URL("https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,ETH&tsyms=USD,RUB&api_key=1437b60bf3857dbcd682b5049a2b1c4fe31956b03bebcd28587086c77ec8870f");
 //todo сменить криптокомпаре на другое апи
-        //todo вынести ключ в конфиг файл
+
+
 
         String formatedReturn = "Курсы Крипты: ";
-        URL requestUrl = new URL("https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD,rub&api_key=1437b60bf3857dbcd682b5049a2b1c4fe31956b03bebcd28587086c77ec8870f");
+        URL requestUrl = new URL("https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD,rub&api_key="+cryptoKey);
         String response = httpRequestor.getResponse(requestUrl);
         Gson gson = new Gson();
         crypto eth = gson.fromJson(response, crypto.class);
         formatedReturn += "\n ETH:\n" + eth.toString();
 
-        requestUrl = new URL("https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD,rub&api_key=1437b60bf3857dbcd682b5049a2b1c4fe31956b03bebcd28587086c77ec8870f");
+        requestUrl = new URL("https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD,rub&api_key="+cryptoKey);
         response = httpRequestor.getResponse(requestUrl);
         crypto btc = gson.fromJson(response, crypto.class);
         formatedReturn += "\n BTC:\n" + btc.toString();
