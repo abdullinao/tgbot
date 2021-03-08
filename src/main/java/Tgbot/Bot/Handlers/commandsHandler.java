@@ -1,20 +1,16 @@
 package Tgbot.Bot.Handlers;
 
-import Tgbot.APIs.httpWorker;
+import Tgbot.externalAPIs.httpRequestor;
 import Tgbot.Bot.Model.oldMoney;
 import Tgbot.Bot.Model.userDAO.user;
 import Tgbot.Bot.Model.userDAO.userService;
 import Tgbot.Bot.Utils.commandsUtils;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import com.google.gson.Gson;
-import com.google.gson.*;
-import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 
 import Tgbot.Bot.Model.crypto;
 
@@ -32,15 +28,6 @@ public class commandsHandler {
 
         if (allUsers.size() != 0) {
             String topText = "";
-
-
-//            for (int i=0; i<allUsers.size()||i<=5;i++){
-//                topText += i+1 + ". " + allUsers.get(i).getUserFullName() +
-//                        " (" + allUsers.get(i).getUserLogin() + ")"
-//                        + " с репутацией: " + allUsers.get(i).getReputation() + ";\n";
-//
-//            }
-
 
             int i = 1;
             for (user allUser : allUsers) {
@@ -85,8 +72,8 @@ public class commandsHandler {
     public String changeRepCommand(Message msg, int modificationType) {
 
 
-        user userToModify = new user();
-        user userThatMadeChanges = new user();
+        user userToModify;
+        user userThatMadeChanges;
 
 
         if (!msg.getReplyToMessage().getFrom().getUserName().equals("KDq3CVM43w_bot"))//todo имя бота должно подтягиваться из конфига
@@ -129,45 +116,31 @@ public class commandsHandler {
 //URL cryptoUrl = new URL("https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,ETH&tsyms=USD,RUB&api_key=1437b60bf3857dbcd682b5049a2b1c4fe31956b03bebcd28587086c77ec8870f");
 //todo сменить криптокомпаре на другое апи
         //todo вынести ключ в конфиг файл
+
         String formatedReturn = "Курсы Крипты: ";
         URL requestUrl = new URL("https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD,rub&api_key=1437b60bf3857dbcd682b5049a2b1c4fe31956b03bebcd28587086c77ec8870f");
-        String response = httpWorker.getResponse(requestUrl);
+        String response = httpRequestor.getResponse(requestUrl);
         Gson gson = new Gson();
         crypto eth = gson.fromJson(response, crypto.class);
         formatedReturn += "\n ETH:\n" + eth.toString();
 
         requestUrl = new URL("https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD,rub&api_key=1437b60bf3857dbcd682b5049a2b1c4fe31956b03bebcd28587086c77ec8870f");
-        response = httpWorker.getResponse(requestUrl);
+        response = httpRequestor.getResponse(requestUrl);
         crypto btc = gson.fromJson(response, crypto.class);
         formatedReturn += "\n BTC:\n" + btc.toString();
 
 
         requestUrl = new URL("https://www.cbr-xml-daily.ru/latest.js");
-        response = httpWorker.getResponse(requestUrl);
+        response = httpRequestor.getResponse(requestUrl);
         oldMoney oldMoney = gson.fromJson(response, oldMoney.class);
 
-
-        System.out.println("EUR" + oldMoney.getRates().get("EUR"));
 
         formatedReturn += "\nКурсы валют:\n" + " USD: " + String.format("%.2f", 1 / oldMoney.getRates().get("USD"))
                 + "\n EUR: " + String.format("%.2f", 1 / oldMoney.getRates().get("EUR"));
 
 
         return formatedReturn;
-//
-//         Type collectionType = new TypeToken<Collection<crypto>>(){}.getType();
-//         Collection<crypto> cryptos = gson.fromJson(response, collectionType);
-//         System.out.println(cryptos.size());
-//
-//         for (crypto crypto : cryptos) {
-//             System.out.println(crypto);
-//             System.out.println("---");
-//
-//         }
-
-        //  return response;
-
-    }
+     }
 
 //    public String getWeather() throws MalformedURLException {
 //

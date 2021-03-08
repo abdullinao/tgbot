@@ -1,4 +1,4 @@
-package Tgbot.APIs;
+package Tgbot.externalAPIs;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class httpWorker {
+public class httpRequestor {
     public static String getResponse(URL url) throws IOException {
 
 

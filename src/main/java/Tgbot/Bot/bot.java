@@ -18,6 +18,7 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import javax.annotation.PostConstruct;
 
 import java.util.Locale;
+import java.util.Objects;
 
 import static Tgbot.Bot.Utils.commandsUtils.UTILwrongChat;
 
@@ -67,7 +68,8 @@ public class bot extends TelegramLongPollingBot {
             Message message = update.getMessage();
 
             /*бот работает только в 1 чате, по-этому дополнительно проверяем что чатайди = заданому чат айди. */
-            if (message != null && message.hasText() && String.valueOf(message.getChatId()).equals(chatId)) {
+            if (message != null && message.hasText() && String.valueOf(message.getChatId()).equals(chatId) ||
+                   message.getForwardFrom().getId()!=null) {
                 checkUserInBD(message);
                 try {
                     String incomeMessage = message.getText().toLowerCase(Locale.ROOT);
