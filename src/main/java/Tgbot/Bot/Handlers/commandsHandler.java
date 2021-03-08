@@ -53,12 +53,9 @@ public class commandsHandler {
         String callAll = "";
 
         for (user allUser : allUsers) {
-            callAll += "@" + allUser.getUserLogin() + " ";
-//              if (!allUser.getUserLogin().equals("")) {
-//                  callAll += "@" + allUser.getId() + " ";
-//              } else {
-//                  callAll += "@" + allUser.getUserLogin() + " ";
-//              }
+            if (allUser.getUserLogin()!=null) {
+                callAll += "@" + allUser.getUserLogin() + " ";
+            }
         }
         return callAll;
     }
@@ -75,8 +72,7 @@ public class commandsHandler {
         user userToModify;
         user userThatMadeChanges;
 
-
-        if (!msg.getReplyToMessage().getFrom().getUserName().equals("KDq3CVM43w_bot"))//todo имя бота должно подтягиваться из конфига
+        if (!msg.getReplyToMessage().getFrom().getIsBot())
         {
             userToModify = userService.findById(msg.getReplyToMessage().getFrom().getId());
             userThatMadeChanges = userService.findById(msg.getFrom().getId());
@@ -103,7 +99,7 @@ public class commandsHandler {
 
 
         } else {
-            return "Мне нельзя изменить репутацию.";
+            return "Нельзя менять репутацию боту.";
         }
 
         // System.out.println(msg.getReplyToMessage().getFrom().getId()); //916448783

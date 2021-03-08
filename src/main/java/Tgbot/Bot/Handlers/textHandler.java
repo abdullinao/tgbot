@@ -18,7 +18,7 @@ public class textHandler {
         if (login != null) {
             userSender.setUserLogin(login);
         } else {
-            userSender.setUserLogin("");
+            userSender.setUserLogin(null);
         }
         user userInBd = new user();
         try {
@@ -32,9 +32,9 @@ public class textHandler {
             userSender.setReputation(0);
             userService.persist(userSender);
         }//если есть проверяем изменения логина или фио
-        else if (!userInBd.getUserFullName().equals(userSender.getUserFullName())
-                || !userInBd.getUserLogin().equals(userSender.getUserLogin())
-        ) {
+        else if (!userInBd.getUserFullName().equals(userSender.getUserFullName())|| userInBd.getUserLogin() == null
+                || !userInBd.getUserLogin().equals(userSender.getUserLogin()) )
+          {
             userInBd.setUserFullName(userSender.getUserFullName());
             userInBd.setUserLogin(userSender.getUserLogin());
             userService.update(userInBd);

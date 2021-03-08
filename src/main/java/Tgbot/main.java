@@ -11,16 +11,6 @@ import Tgbot.Bot.bot;
 @SpringBootApplication
 public class main {
     public static void main(String[] args) throws TelegramApiException {
-
-
-        SpringApplication.run(main.class, args);
-
-
-//        try {
-//            TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
-//            botsApi.registerBot(new bot());
-//        } catch (TelegramApiException e) {
-//            e.printStackTrace();
-//        }
+         SpringApplication.run(main.class, args);
     }
 }

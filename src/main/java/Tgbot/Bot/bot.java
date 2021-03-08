@@ -4,6 +4,8 @@ package Tgbot.Bot;
 import Tgbot.Bot.Handlers.commandsHandler;
 import Tgbot.Bot.Utils.commandsUtils;
 import Tgbot.Bot.Handlers.textHandler;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
@@ -18,42 +20,35 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import javax.annotation.PostConstruct;
 
 import java.util.Locale;
-import java.util.Objects;
 
 import static Tgbot.Bot.Utils.commandsUtils.UTILwrongChat;
 
-//@Slf4j
 @Service
 public class bot extends TelegramLongPollingBot {
 
-    //@Override
-    // public String getBotUsername() {
-    // return "springtgbottest66699";
-    //  }
-//@Override
-    //public String getBotToken() {
-    //     return "1624746692:AAHslRVLgRHzdv_J8TaYLFhWhRxdkHW_3io";
-    //  }
-    @Override
-    public String getBotUsername() {
-        return "KDq3CVM43w_bot";
-    }
 
-    @Override
+//    @Value("${bot.name}")
+//    private String botName;
+//    @Value("${bot.token}")
+//    private String botToken;
+//    @Value("${bot.chatId}")
+//    private String chatId;
 
-    public String getBotToken() {
-        return "916448783:AAEmLGLVEs0vrFm6Ke-Y2949O5fYD6nnYW8";
-    }
+    private String chatId = "-278344922";
+ 
+    private String botToken  = "916448783:AAGh7y38LVJROzuWneekUYXr59najQdQzdc";
+    private String botName = "KDq3CVM43w_bot";
+
 
     private static Tgbot.Bot.Handlers.commandsHandler commandsHandler = new commandsHandler();
     private static Tgbot.Bot.Handlers.textHandler textHandler = new textHandler();
     //https://core.telegram.org/bots/api#update
 
-    private String chatId = "-278344922";//todo вынести чат айди и прочие параметра в отдельный конфиг файл
-
     @PostConstruct
     public void registerBot() {
 
+        System.out.println("bot id " + botName);
+        System.out.println("bot token " + botToken);
         try {
             TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
             botsApi.registerBot(new bot());
@@ -69,7 +64,7 @@ public class bot extends TelegramLongPollingBot {
 
             /*бот работает только в 1 чате, по-этому дополнительно проверяем что чатайди = заданому чат айди. */
             if (message != null && message.hasText() && String.valueOf(message.getChatId()).equals(chatId) ||
-                   message.getForwardFrom().getId()!=null) {
+                    message.getForwardFrom().getId() != null) {
                 checkUserInBD(message);
                 try {
                     String incomeMessage = message.getText().toLowerCase(Locale.ROOT);
@@ -100,28 +95,9 @@ public class bot extends TelegramLongPollingBot {
 //                    }
                     else if (incomeMessage.equals("/курс")) {
 
-                         sendMsg(message, commandsHandler.getCourse());
+                        sendMsg(message, commandsHandler.getCourse());
 
-                     }
-
-//
-//                    switch (message.getText()) {
-//                        case "/help":
-//                            sendMsg(message, commandsUtils.UTILhelpText);
-//                            break;
-//                        case "/top":
-//                            sendMsg(message, commandsHandler.topCommand());
-//                            break;
-//                        case "/all":
-//                            sendMsg(message, commandsHandler.allCommand());
-//                            break;
-//                        case "плюс реп":
-//                            sendMsg(message, commandsHandler.changeRepCommand(message, 1));
-//                            break;
-//                        case "минус реп":
-//                            sendMsg(message, commandsHandler.changeRepCommand(message, 0));
-//                            break;
-//                    }
+                    }
 
                 } catch (Exception e) {
                     System.out.println("commands choser ");
@@ -134,17 +110,6 @@ public class bot extends TelegramLongPollingBot {
             System.out.println("onUpdateReceived ");
             e.printStackTrace();
         }
-        // We check if the update has a message and the message has text
-//        if (update.hasMessage() && update.getMessage().hasText()) {
-//            SendMessage message = new SendMessage(); // Create a SendMessage object with mandatory fields
-//            message.setChatId(String.valueOf(update.getMessage().getChatId()));
-//            message.setText("fuck u");
-//            try {
-//                execute(message); // Call method to send the message
-//            } catch (TelegramApiException e) {
-//                e.printStackTrace();
-//            }
-//        }
     }
 
     public void sendMsg(Message msg, String text) {
@@ -179,5 +144,16 @@ public class bot extends TelegramLongPollingBot {
             System.out.println("ошибка в методе checkUserInBD");
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public String getBotUsername() {
+        return botName;
+    }
+
+    @Override
+
+    public String getBotToken() {
+        return botToken;
     }
 }
