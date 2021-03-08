@@ -1,6 +1,7 @@
 package Tgbot.Bot.Handlers;
 
 import Tgbot.APIs.httpWorker;
+import Tgbot.Bot.Model.oldMoney;
 import Tgbot.Bot.Model.userDAO.user;
 import Tgbot.Bot.Model.userDAO.userService;
 import Tgbot.Bot.Utils.commandsUtils;
@@ -115,7 +116,7 @@ public class commandsHandler {
 
 
         } else {
-            return "Мне нельзя повысить репутацию.";
+            return "Мне нельзя изменить репутацию.";
         }
 
         // System.out.println(msg.getReplyToMessage().getFrom().getId()); //916448783
@@ -128,17 +129,28 @@ public class commandsHandler {
 //URL cryptoUrl = new URL("https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,ETH&tsyms=USD,RUB&api_key=1437b60bf3857dbcd682b5049a2b1c4fe31956b03bebcd28587086c77ec8870f");
 //todo сменить криптокомпаре на другое апи
         //todo вынести ключ в конфиг файл
-        String formatedReturn = "Курсы валют: ";
-        URL cryptoUrl = new URL("https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD,rub&api_key=1437b60bf3857dbcd682b5049a2b1c4fe31956b03bebcd28587086c77ec8870f");
-        String response = httpWorker.getResponse(cryptoUrl);
+        String formatedReturn = "Курсы Крипты: ";
+        URL requestUrl = new URL("https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD,rub&api_key=1437b60bf3857dbcd682b5049a2b1c4fe31956b03bebcd28587086c77ec8870f");
+        String response = httpWorker.getResponse(requestUrl);
         Gson gson = new Gson();
         crypto eth = gson.fromJson(response, crypto.class);
-        formatedReturn += "\nETH:\n" + eth.toString();
+        formatedReturn += "\n ETH:\n" + eth.toString();
 
-        cryptoUrl = new URL("https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD,rub&api_key=1437b60bf3857dbcd682b5049a2b1c4fe31956b03bebcd28587086c77ec8870f");
-        response = httpWorker.getResponse(cryptoUrl);
+        requestUrl = new URL("https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD,rub&api_key=1437b60bf3857dbcd682b5049a2b1c4fe31956b03bebcd28587086c77ec8870f");
+        response = httpWorker.getResponse(requestUrl);
         crypto btc = gson.fromJson(response, crypto.class);
-        formatedReturn += "\nBTC:\n" + btc.toString();
+        formatedReturn += "\n BTC:\n" + btc.toString();
+
+
+        requestUrl = new URL("https://www.cbr-xml-daily.ru/latest.js");
+        response = httpWorker.getResponse(requestUrl);
+        oldMoney oldMoney = gson.fromJson(response, oldMoney.class);
+
+
+        System.out.println("EUR" + oldMoney.getRates().get("EUR"));
+
+        formatedReturn += "\nКурсы валют:\n" + " USD: " + String.format("%.2f", 1 / oldMoney.getRates().get("USD"))
+                + "\n EUR: " + String.format("%.2f", 1 / oldMoney.getRates().get("EUR"));
 
 
         return formatedReturn;

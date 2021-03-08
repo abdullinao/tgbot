@@ -28,6 +28,6 @@ public class crypto {
     }
     public String toString (){
 
-        return "RUB: " + getRUB() + "\nUSD: " + getUSD();
+        return "  RUB: " + getRUB() + "\n  USD: " + getUSD();
     }
 }

@@ -25,7 +25,7 @@ public class httpWorker {
                 response.append(inputLine);
             }
             in.close();
-            
+
             return response.toString();
         } else {
             System.out.println("GET request not worked");
