@@ -32,7 +32,7 @@ public class user {
 
         return "id = " + this.id
                 + " name = " + this.userFullName
-                + " login=" + this.userLogin
+                + " login = " + this.userLogin
                 + " rep = " + this.reputation;
     }
 
