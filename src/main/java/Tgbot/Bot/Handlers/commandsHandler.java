@@ -41,7 +41,7 @@ public class commandsHandler {
             int i = 1;
             for (user allUser : allUsers) {
                 logger.debug("adding to message user with parameters: {}, {}, {}", allUser.getUserFullName(), allUser.getUserLogin(), allUser.getReputation());
-                topText += i + ". " + allUser.getUserFullName() + " (" + allUser.getUserLogin() + ")" + " с репутацией: " + allUser.getReputation() + ";\n";
+                topText += i + ". " + allUser.getUserFullName() + " (" + allUser.getUserLogin() + ")" + " с репутацией: " + allUser.getReputation() + "\n";
                 i++;
             }
             logger.info("/top finished");
