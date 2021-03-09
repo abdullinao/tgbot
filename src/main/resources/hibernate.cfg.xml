@@ -6,9 +6,9 @@
 <hibernate-configuration>
     <session-factory>
         <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
-        <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/tgbot</property>
-        <property name="hibernate.connection.username">postgres</property>
-        <property name="hibernate.connection.password">root</property>
+        <property name="hibernate.connection.url">jdbc:postgresql://ec2-52-209-134-160.eu-west-1.compute.amazonaws.com:5432/dddfbq3td5glm4</property>
+        <property name="hibernate.connection.username">aehfcdxztgmayw</property>
+        <property name="hibernate.connection.password">5d9762b94432ca914b479e2d153c046c0e4b8fd9569c7971a51d75167eff97dd</property>
 
         <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQL9Dialect</property>
         <property name="hibernate.show_sql">false</property>
