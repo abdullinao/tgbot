@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Random;
 
 import Tgbot.Bot.Model.crypto;
 
@@ -40,8 +41,14 @@ public class commandsHandler {
             String topText = "";
             int i = 1;
             for (user allUser : allUsers) {
-                logger.debug("adding to message user with parameters: {}, {}, {}", allUser.getUserFullName(), allUser.getUserLogin(), allUser.getReputation());
-                topText += i + ". " + allUser.getUserFullName() + " (" + allUser.getUserLogin() + ")" + " с репутацией: " + allUser.getReputation() + "\n";
+                if (allUser.getUserLogin() != null) {
+                    logger.debug("adding to message user with parameters: {}, {}, {}", allUser.getUserFullName(), allUser.getUserLogin(), allUser.getReputation());
+                    topText += i + ". " + allUser.getUserFullName() + " (" + allUser.getUserLogin() + ")" + " с репутацией: " + allUser.getReputation() + "\n";
+                } else {
+                    logger.debug("adding to message user with parameters: {}, {}", allUser.getUserFullName(), allUser.getReputation());
+                    topText += i + ". " + allUser.getUserFullName() + " с репутацией: " + allUser.getReputation() + "\n";
+
+                }
                 i++;
             }
             logger.info("/top finished");
@@ -101,7 +108,7 @@ public class commandsHandler {
         userThatMadeChanges = userService.findById(msg.getFrom().getId());
         logger.debug("found user: {}", userThatMadeChanges);
 
-        if (userToModify==null) {
+        if (userToModify == null) {
             return "пользователя нет в бд";
         }
 
@@ -118,9 +125,9 @@ public class commandsHandler {
             logger.info("reputation increasing completed");
             return userThatMadeChanges.getUserFullName() + "(" + userThatMadeChanges.getUserLogin() + ")"
                     + " прибавил реп пользователю "
-                    + userToModify.getUserFullName() + "(" + userToModify.getUserLogin() + ")";
+                    + userToModify.getUserFullName() + "(" + userToModify.getUserLogin() + "), текущая репутация: " + userToModify.getReputation();
 
-        } else   {
+        } else {
             logger.info("decreasing reputation to user: {}", userToModify);
             userToModify.setReputation(userToModify.getReputation() - 1);
             logger.debug("updating user in DB...");
@@ -128,7 +135,7 @@ public class commandsHandler {
             logger.info("reputation decreasing completed");
             return userThatMadeChanges.getUserFullName() + "(" + userThatMadeChanges.getUserLogin() + ")"
                     + " понизил реп пользователю "
-                    + userToModify.getUserFullName() + "(" + userToModify.getUserLogin() + ")";
+                    + userToModify.getUserFullName() + "(" + userToModify.getUserLogin() + "), текущая репутация: " + userToModify.getReputation();
         }
 
 
@@ -174,6 +181,31 @@ public class commandsHandler {
 
         logger.info("/курс finished successfully");
         return formatedReturn;
+    }
+
+    public String randomCommand(Message message) {
+        logger.info("/rand initiated");
+        try {
+            String[] split = message.getText().split(" ");
+            int limiter;
+            try {
+                limiter = Integer.parseInt(split[1]);
+            } catch (Exception e) {
+                limiter = 100;
+            }
+
+            logger.debug("limiter = {}", limiter);
+            Random rnd = new Random();
+            String rndStr = String.valueOf(rnd.nextInt(limiter));
+            logger.debug("random value: {}", rnd);
+
+            logger.info("/rand finished");
+            return rndStr;
+        } catch (Exception e) {
+            logger.error("there was a error in /rand", e);
+            return "ошибка)";
+        }
+
     }
 
 //    public String getWeather() throws MalformedURLException {

@@ -98,6 +98,10 @@ public class bot extends TelegramLongPollingBot {
                         logger.debug("минус реп command execution");
                         sendMsg(message, commandsHandler.changeRepCommand(message, 0));
                         logger.debug("миннус реп execution completed");
+                    }else if (incomeMessage.contains("/rand")) {
+                        logger.debug("/rand");
+                        sendMsg(message, commandsHandler.randomCommand(message));
+                        logger.debug("/rand execution completed");
                     }
 //                    else if (incomeMessage.equals("/погода")) {
 //
