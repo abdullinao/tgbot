@@ -5,10 +5,10 @@ import Tgbot.Bot.Handlers.commandsHandler;
 import Tgbot.Bot.Utils.commandsUtils;
 import Tgbot.Bot.Handlers.textHandler;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
+
 import org.telegram.telegrambots.meta.api.methods.ActionType;
 import org.telegram.telegrambots.meta.api.methods.send.SendChatAction;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -19,7 +19,6 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 
 import java.util.Locale;
@@ -47,6 +46,7 @@ public class bot extends TelegramLongPollingBot {
 
     private static Tgbot.Bot.Handlers.commandsHandler commandsHandler = new commandsHandler();
     private static Tgbot.Bot.Handlers.textHandler textHandler = new textHandler();
+
 
     //https://core.telegram.org/bots/api#update
     @PostConstruct
@@ -98,17 +98,11 @@ public class bot extends TelegramLongPollingBot {
                         logger.debug("минус реп command execution");
                         sendMsg(message, commandsHandler.changeRepCommand(message, 0));
                         logger.debug("миннус реп execution completed");
-                    }else if (incomeMessage.contains("/rand")) {
+                    } else if (incomeMessage.contains("/rand")) {
                         logger.debug("/rand");
                         sendMsg(message, commandsHandler.randomCommand(message));
                         logger.debug("/rand execution completed");
-                    }
-//                    else if (incomeMessage.equals("/погода")) {
-//
-//                        sendMsg(message, commandsHandler.getWeather());
-//
-//                    }
-                    else if (incomeMessage.equals("/курс")) {
+                    } else if (incomeMessage.equals("/курс")) {
                         logger.debug("/курс command execution");
                         sendMsg(message, commandsHandler.getCourse());
                         logger.debug("/курс execution completed");
@@ -124,9 +118,8 @@ public class bot extends TelegramLongPollingBot {
         } catch (Exception e) {
             logger.error("error in onUpdateReceived method: ", e);
         }
-    }
 
-//<a href="tg://user?id=123456789">inline mention of a user</a>
+    }
 
     public void sendMsg(Message msg, String text, String... method) {
         logger.debug("message sending invoked");
@@ -142,7 +135,7 @@ public class bot extends TelegramLongPollingBot {
             logger.debug("executing typing emulation...");
             execute(sendChatAction); //делает вид что печатает
             if (method != null) {
-                message2Send.setParseMode("HTML");
+                message2Send.setParseMode("HTML"); //чтобы отметить пользователя без логина
             }
             logger.debug("message to send: {}", message2Send);
             logger.debug("executing sending...");
@@ -153,6 +146,11 @@ public class bot extends TelegramLongPollingBot {
             logger.error("error in message sending: ", e);
 
         }
+    }
+
+    @Override
+    public String getBotUsername() {
+        return botName;
     }
 
 
@@ -174,13 +172,9 @@ public class bot extends TelegramLongPollingBot {
     }
 
     @Override
-    public String getBotUsername() {
-        return botName;
-    }
-
-    @Override
 
     public String getBotToken() {
         return botToken;
     }
+
 }
