@@ -60,7 +60,7 @@ public class bot extends TelegramLongPollingBot {
     //https://core.telegram.org/bots/api#update
 
     public void initMethod() {
-
+        logger.debug("OS INFO: {}", System.getProperties().toString());
         try {
             logger.debug("starting bot registration");
             TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
@@ -75,6 +75,7 @@ public class bot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         logger.debug("received update: {}", update);
+
         try {
             Message message = update.getMessage();
             String response = incomeMessagesHandler.receiveMessage(message, chatId);

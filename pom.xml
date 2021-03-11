@@ -89,7 +89,17 @@
             <version>2.1.0</version>
         </dependency>
 
-
+        <!-- https://mvnrepository.com/artifact/io.humble/humble-video-all -->
+        <dependency>
+            <groupId>io.humble</groupId>
+            <artifactId>humble-video-all</artifactId>
+            <version>0.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>net.bramp.ffmpeg</groupId>
+            <artifactId>ffmpeg</artifactId>
+            <version>0.6.2</version>
+        </dependency>
     </dependencies>
 
 
@@ -106,6 +116,7 @@
                     <includes>
                         <include>target/tgbot-1.0-SNAPSHOT.jar</include>
                         <include>target/dependency/</include>
+                        <include>ffmpeg/</include>
 
                     </includes>
                     <processTypes>
