@@ -21,11 +21,17 @@ import Tgbot.Bot.Model.crypto;
 
 public class commandsHandler {
     Logger logger = LoggerFactory.getLogger(commandsHandler.class);
-
-    @Value("${crypro.cryptocompareKey}")
     private String cryptoKey;
+    private userService userService;
 
-    userService userService = new userService();
+
+    public void setCryptoKey(String cryptoKey) {
+        this.cryptoKey = cryptoKey;
+    }
+
+    public void setUserService(Tgbot.Bot.Model.userDAO.userService userService) {
+        this.userService = userService;
+    }
 
     public String topCommand() {
         logger.info("/top executed");

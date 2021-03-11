@@ -7,22 +7,42 @@
 >
     <context:property-placeholder location="classpath:application.properties"/>
 <!-- главный бин бота в который инжектится бин обработки входящих сообщений-->
-    <bean id="bot" class="Tgbot.Bot.bot" init-method="initMethod">
-        <property name="botToken" value="${bot.token}"/>
-        <property name="botName" value="${bot.name}"/>
-        <property name="chatId" value="${bot.chatId}"/>
-        <property name="incomeMessagesHandler" ref="incomeMessagesHandler" />
+   <bean id="bot" class="Tgbot.Bot.bot" init-method="initMethod">
+       <!--    <constructor-arg index="0" value="${bot.token}"/>
+       <constructor-arg index="1" value="${bot.name}"/>
+       <constructor-arg index="2" value="${bot.chatId}"/>
+       <constructor-arg index="3" ref="incomeMessagesHandler"/> -->
 
-    </bean>
+      <property name="botToken" value="${bot.token}"/>
+       <property name="botName" value="${bot.name}"/>
+       <property name="chatId" value="${bot.chatId}"/>
+       <property name="incomeMessagesHandler" ref="incomeMessagesHandler" />
 
+</bean>
+<!--handlers-->
     <bean id="incomeMessagesHandler" class="Tgbot.Bot.Handlers.IncomeMessagesHandler" >
         <property name="commandsHandler" ref="commandsHandler" />
         <property name="textHandler" ref="textHandler" />
     </bean>
 
+    <!--бин команд хендлера с инжектом в него ключа апи из проперти и бина юзер сервиса для взаимодействия с бд-->
+    <bean id="commandsHandler" class="Tgbot.Bot.Handlers.commandsHandler">
+        <property name="cryptoKey" value="${crypto.cryptoCompareKey}"/>
+        <property name="userService" ref="userService" />
+    </bean>
 
-    <bean id="commandsHandler" class="Tgbot.Bot.Handlers.commandsHandler"/>
-    <bean id="textHandler" class="Tgbot.Bot.Handlers.textHandler"/>
+    <bean id="textHandler" class="Tgbot.Bot.Handlers.textHandler" >
+
+        <property name="userService" ref="userService" />
+    </bean>
+
+    <!--dao service-->
+    <bean id="userDAO" class="Tgbot.Bot.Model.userDAO.userDAO"/>
+    <bean id="userService" class="Tgbot.Bot.Model.userDAO.userService" >
+        <property name="userDAO" ref="userDAO"/>
+    </bean>
+
+
     <!--  <bean id="..." class="...">
 
     </bean>

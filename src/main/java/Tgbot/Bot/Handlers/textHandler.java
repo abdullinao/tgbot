@@ -7,8 +7,11 @@ import org.slf4j.LoggerFactory;
 
 public class textHandler {
     Logger logger = LoggerFactory.getLogger(textHandler.class);
+    userService userService;
 
-    userService userService = new userService();
+    public void setUserService(Tgbot.Bot.Model.userDAO.userService userService) {
+        this.userService = userService;
+    }
 
     public void analyzeIfUserInDB(int id, String firstName, String lastName, String login) {
         logger.info("analyzing user in DB with parameters: {}, {}, {}, {}", id, firstName, lastName, login);
@@ -21,11 +24,8 @@ public class textHandler {
         } else {
             userSender.setUserFullName(firstName);
         }
-        if (login != null) {
-            userSender.setUserLogin(login);
-        } else {
-            userSender.setUserLogin(null);
-        }
+        userSender.setUserLogin(login);
+
         logger.debug("made a user mock: {}", userSender);
 
         user userInBd = new user();

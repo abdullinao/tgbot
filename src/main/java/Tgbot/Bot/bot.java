@@ -29,25 +29,16 @@ public class bot extends TelegramLongPollingBot {
     private String chatId;
     private Tgbot.Bot.Handlers.IncomeMessagesHandler incomeMessagesHandler;
 
-//todo бины в xml
-    //todo погода
-    //todo какие-нибудь уведомления тпиа манги или нового аниме
-    //
-
     public bot(String botToken, String botName, String chatId, Tgbot.Bot.Handlers.IncomeMessagesHandler incomeMessagesHandler) {
         this.botToken = botToken;
         this.botName = botName;
         this.chatId = chatId;
         this.incomeMessagesHandler = incomeMessagesHandler;
     }
+    public bot(){}
 
-    public bot() {
+    //public bot() {}
 
-    }
-
-//todo сначала инициализировать бота через ебучий хмл
-    //todo не инжектятся проперти
-    //todo проверить целиком работоспособность
     //todo webm 2 mp4
 
     //https://core.telegram.org/bots/api#update
@@ -55,11 +46,9 @@ public class bot extends TelegramLongPollingBot {
     public void initMethod() {
 
         try {
-            System.out.println(botToken);
-            System.out.println(botName);
             logger.debug("starting bot registration");
             TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
-            botsApi.registerBot(new bot(botToken, botName, chatId, incomeMessagesHandler)); //todo разобраться почему бот не инитится без конструктора
+            botsApi.registerBot(new bot(botToken,botName,chatId,incomeMessagesHandler)); //todo разобраться почему бот не инитится без конструктора
             logger.debug("bot registration completed successfully");
         } catch (TelegramApiException e) {
             logger.error("ERROR IN REGISTRATION! CHECK API KEY/BOT NAME!", e);

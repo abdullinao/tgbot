@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class userService {
 
 
-    private userDAO userDAO = new userDAO();
+    private userDAO userDAO ;
 
 
     public userService(userDAO userDAO) {
@@ -51,4 +51,7 @@ public class userService {
     }
 
 
+    public void setUserDAO(Tgbot.Bot.Model.userDAO.userDAO userDAO) {
+        this.userDAO=userDAO;
+    }
 }
