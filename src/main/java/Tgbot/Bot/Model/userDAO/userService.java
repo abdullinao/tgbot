@@ -6,15 +6,11 @@ public class userService {
 
 
     private userDAO userDAO ;
-
-
-    public userService(userDAO userDAO) {
-        this.userDAO = userDAO;
+    public void setUserDAO(Tgbot.Bot.Model.userDAO.userDAO userDAO) {
+        this.userDAO=userDAO;
     }
 
-    public userService() {
-
-    }
+    public userService() {}
 
     public void update(user user) {
         userDAO.openCurrentSessionwithTransaction();
@@ -51,7 +47,5 @@ public class userService {
     }
 
 
-    public void setUserDAO(Tgbot.Bot.Model.userDAO.userDAO userDAO) {
-        this.userDAO=userDAO;
-    }
+
 }

@@ -1,10 +1,7 @@
 package Tgbot.Bot;
 
 
-import Tgbot.Bot.Handlers.commandsHandler;
 import Tgbot.Bot.Handlers.IncomeMessagesHandler;
-import Tgbot.Bot.Handlers.textHandler;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
@@ -19,15 +16,32 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.PostConstruct;
-
 @Service
 public class bot extends TelegramLongPollingBot {
-    Logger logger = LoggerFactory.getLogger(bot.class);
+    private final Logger logger = LoggerFactory.getLogger(bot.class);
+
+    //начало инжекта
     private String botToken;
     private String botName;
     private String chatId;
     private Tgbot.Bot.Handlers.IncomeMessagesHandler incomeMessagesHandler;
+
+    public void setBotToken(String botToken) {
+        this.botToken = botToken;
+    }
+
+    public void setBotName(String botName) {
+        this.botName = botName;
+    }
+
+    public void setChatId(String chatId) {
+        this.chatId = chatId;
+    }
+
+    public void setIncomeMessagesHandler(IncomeMessagesHandler incomeMessagesHandler) {
+        this.incomeMessagesHandler = incomeMessagesHandler;
+    }
+    //конец инжекта
 
     public bot(String botToken, String botName, String chatId, Tgbot.Bot.Handlers.IncomeMessagesHandler incomeMessagesHandler) {
         this.botToken = botToken;
@@ -35,7 +49,9 @@ public class bot extends TelegramLongPollingBot {
         this.chatId = chatId;
         this.incomeMessagesHandler = incomeMessagesHandler;
     }
-    public bot(){}
+
+    public bot() {
+    }
 
     //public bot() {}
 
@@ -48,7 +64,7 @@ public class bot extends TelegramLongPollingBot {
         try {
             logger.debug("starting bot registration");
             TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
-            botsApi.registerBot(new bot(botToken,botName,chatId,incomeMessagesHandler)); //todo разобраться почему бот не инитится без конструктора
+            botsApi.registerBot(new bot(botToken, botName, chatId, incomeMessagesHandler)); //todo разобраться почему бот не инитится без конструктора
             logger.debug("bot registration completed successfully");
         } catch (TelegramApiException e) {
             logger.error("ERROR IN REGISTRATION! CHECK API KEY/BOT NAME!", e);
@@ -108,19 +124,4 @@ public class bot extends TelegramLongPollingBot {
     }
 
 
-    public void setBotToken(String botToken) {
-        this.botToken = botToken;
-    }
-
-    public void setBotName(String botName) {
-        this.botName = botName;
-    }
-
-    public void setChatId(String chatId) {
-        this.chatId = chatId;
-    }
-
-    public void setIncomeMessagesHandler(IncomeMessagesHandler incomeMessagesHandler) {
-        this.incomeMessagesHandler = incomeMessagesHandler;
-    }
 }
