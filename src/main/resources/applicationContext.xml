@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd"
+>
+    <context:property-placeholder location="classpath:application.properties"/>
+<!-- главный бин бота в который инжектится бин обработки входящих сообщений-->
+    <bean id="bot" class="Tgbot.Bot.bot" init-method="initMethod">
+        <property name="botToken" value="${bot.token}"/>
+        <property name="botName" value="${bot.name}"/>
+        <property name="chatId" value="${bot.chatId}"/>
+        <property name="incomeMessagesHandler" ref="incomeMessagesHandler" />
+
+    </bean>
+
+    <bean id="incomeMessagesHandler" class="Tgbot.Bot.Handlers.IncomeMessagesHandler" >
+        <property name="commandsHandler" ref="commandsHandler" />
+        <property name="textHandler" ref="textHandler" />
+    </bean>
+
+
+    <bean id="commandsHandler" class="Tgbot.Bot.Handlers.commandsHandler"/>
+    <bean id="textHandler" class="Tgbot.Bot.Handlers.textHandler"/>
+    <!--  <bean id="..." class="...">
+
+    </bean>
+
+     more bean definitions go here -->
+
+</beans>
+
