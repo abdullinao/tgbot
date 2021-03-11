@@ -9,12 +9,17 @@ import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.ActionType;
 import org.telegram.telegrambots.meta.api.methods.send.SendChatAction;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendVideo;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.Video;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
 
 @Service
 public class bot extends TelegramLongPollingBot {
@@ -80,7 +85,8 @@ public class bot extends TelegramLongPollingBot {
             Message message = update.getMessage();
             String response = incomeMessagesHandler.receiveMessage(message, chatId);
             if (response != null) {
-                sendResponse(message, response);
+               // sendResponse(message, response);
+                sendResponseVideo(message,response);
             }
         } catch (Exception e) {
             logger.error("erroe: ", e);
@@ -110,6 +116,26 @@ public class bot extends TelegramLongPollingBot {
         } catch (TelegramApiException e) {
             logger.error("error in message sending: ", e);
 
+        }
+    }
+
+
+    public void sendResponseVideo(Message msg, String videoName) {
+
+
+        // Create send method
+        SendVideo SendVideo = new SendVideo();
+        // Set destination chat id
+        SendVideo.setChatId(chatId);
+        // Set the photo file as a new photo (You can also use InputStream with a constructor overload)
+        SendVideo.setVideo(new InputFile(new File(videoName)));
+
+        try {
+            // Execute the method
+            execute(SendVideo);
+
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
         }
     }
 

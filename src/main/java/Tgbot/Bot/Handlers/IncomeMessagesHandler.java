@@ -77,6 +77,14 @@ public class IncomeMessagesHandler extends bot {
                         logger.debug("/курс command execution");
                         return commandsHandler.getCourse();
                     }
+                    else if (incomeMessage.contains(".webm")){
+                        logger.debug("WEBM DETECTED");
+                        return webmHandler.processVideo(message);
+                    }
+                    else if (incomeMessage.equals("/ping")){
+                        logger.debug("ping");
+                        return "pong";
+                    }
 
                 } catch (Exception e) {
                     logger.error("error in first IF onUpdateReceived: ", e);

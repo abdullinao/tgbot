@@ -116,7 +116,6 @@
                     <includes>
                         <include>target/tgbot-1.0-SNAPSHOT.jar</include>
                         <include>target/dependency/</include>
-                        <include>ffmpeg/</include>
 
                     </includes>
                     <processTypes>
