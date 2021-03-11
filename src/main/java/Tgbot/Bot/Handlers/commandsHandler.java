@@ -1,31 +1,35 @@
 package Tgbot.Bot.Handlers;
 
-import Tgbot.Bot.bot;
-import Tgbot.externalAPIs.httpRequestor;
+import Tgbot.Bot.Model.crypto;
 import Tgbot.Bot.Model.oldMoney;
 import Tgbot.Bot.Model.userDAO.user;
 import Tgbot.Bot.Model.userDAO.userService;
 import Tgbot.Bot.Utils.commandsUtils;
+import Tgbot.externalAPIs.httpRequestor;
+import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
 
-import Tgbot.Bot.Model.crypto;
-
 public class commandsHandler {
-    Logger logger = LoggerFactory.getLogger(commandsHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(commandsHandler.class);
 
-    @Value("${crypro.cryptocompareKey}")
+
+    //тут происходит инжект
     private String cryptoKey;
-
-    userService userService = new userService();
+    private userService userService;
+    public void setCryptoKey(String cryptoKey) {
+        this.cryptoKey = cryptoKey;
+    }
+    public void setUserService(Tgbot.Bot.Model.userDAO.userService userService) {
+        this.userService = userService;
+    }
+//тут инжект кончается
 
     public String topCommand() {
         logger.info("/top executed");

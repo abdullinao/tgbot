@@ -12,9 +12,7 @@ public class userDAO {
 
 
     private static SessionFactory sessionFactory;
-
     private Session currentSession;
-
     private Transaction currentTransaction;
 
     public userDAO() {
