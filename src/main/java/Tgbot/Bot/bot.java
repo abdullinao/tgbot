@@ -73,30 +73,48 @@ public class bot extends TelegramLongPollingBot {
         }
     }
 
+
+
+
+    /*    new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (update.hasMessage()) {
+
+                }
+              }
+       }).start
+    * */
+
     @Override
     public void onUpdateReceived(Update update) {
         logger.debug("received update: {}", update);
 
-        try {
-            Message message = update.getMessage();
+        Thread thread = new Thread(() -> {
+            logger.debug("new thread started");
+            if (update.hasMessage()) {
+                logger.debug("update has message");
+                try {
+                    Message message = update.getMessage();
+                    Message response = incomeMessagesHandler.receiveMessage(message, chatId);
 
-            Message response = incomeMessagesHandler.receiveMessage(message, chatId);
+                    if (response != null) {
 
-            if (response != null) {
-
-                if (response.getText().contains("video:")) {
-                    logger.debug("MESSAGES HANDLER RESPONSE CONTAINS PATH TO VIDEO! {}", response.getText());
-                    sendResponseVideo(message, response);
-                } else {
-                    logger.debug("msg hndl response containts text");
-                    sendResponse(message, response);
+                        if (response.getText().contains("video:")) {
+                            logger.debug("MESSAGES HANDLER RESPONSE CONTAINS PATH TO VIDEO! {}", response.getText());
+                            sendResponseVideo(message, response);
+                        } else {
+                            logger.debug("msg hndl response containts text");
+                            sendResponse(message, response);
+                        }
+                    }
+                } catch (Exception e) {
+                    logger.error("error in onUpdateReceived: ", e);
                 }
-
-
             }
-        } catch (Exception e) {
-            logger.error("error in onUpdateReceived: ", e);
-        }
+        });
+        thread.start();
+
 
     }
 

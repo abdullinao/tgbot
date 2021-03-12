@@ -1,15 +1,9 @@
 package Tgbot.Bot.Handlers.VideoHandler;
 
-import Tgbot.Bot.bot;
-import Tgbot.externalAPIs.httpRequestor;
-import net.bramp.ffmpeg.FFmpeg;
-import net.bramp.ffmpeg.FFmpegExecutor;
-import net.bramp.ffmpeg.FFprobe;
-import net.bramp.ffmpeg.builder.FFmpegBuilder;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.Video;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -26,7 +20,8 @@ public class webmHandler implements IVideoHandler {
     public void setApiURL(String apiURL) {
         this.apiURL = apiURL;
     }
-
+    //todo сделать бин со скоупом реквест и чтоб после завершения реквеста происходил дестрой метод очищающий все сохраненные вебмки
+    //todo перенести вебм в отдельные каталоги
     @Override
     public String processVideo(Message incomeMsg) {
 
