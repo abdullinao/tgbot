@@ -141,8 +141,8 @@ public class bot extends TelegramLongPollingBot {
         logger.debug("starting video sending");
         SendVideo SendVideo = new SendVideo();
         SendVideo.setChatId(chatId);
-        logger.debug("video path set to: {}", processedResponse.getText().substring(processedResponse.getText().lastIndexOf(": ")));
-        SendVideo.setVideo(new InputFile(new File("/" + processedResponse.getText().substring(processedResponse.getText().indexOf(" ") + 1))));
+        logger.debug("video path set to: {}", processedResponse.getText().substring(processedResponse.getText().indexOf(" ") + 1));
+        SendVideo.setVideo(new InputFile(new File(processedResponse.getText().substring(processedResponse.getText().indexOf(" ") + 1))));
         logger.debug("setVideo ok");
 
         try {
