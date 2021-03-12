@@ -34,3 +34,4 @@ target/classes/Hibernate.cfg.xml
 target/classes/application.properties
 target/classes/application.properties
 target/classes/Hibernate.cfg.xml
+*.mp4
