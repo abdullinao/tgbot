@@ -9,12 +9,17 @@ import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.ActionType;
 import org.telegram.telegrambots.meta.api.methods.send.SendChatAction;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendVideo;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.Video;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
 
 @Service
 public class bot extends TelegramLongPollingBot {
@@ -53,14 +58,10 @@ public class bot extends TelegramLongPollingBot {
     public bot() {
     }
 
-    //public bot() {}
-
-    //todo webm 2 mp4
-
     //https://core.telegram.org/bots/api#update
 
     public void initMethod() {
-
+        logger.debug("OS INFO: {}", System.getProperties().toString());
         try {
             logger.debug("starting bot registration");
             TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
@@ -72,32 +73,62 @@ public class bot extends TelegramLongPollingBot {
         }
     }
 
+
+
+
+    /*    new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (update.hasMessage()) {
+
+                }
+              }
+       }).start
+    * */
+
     @Override
     public void onUpdateReceived(Update update) {
         logger.debug("received update: {}", update);
-        try {
-            Message message = update.getMessage();
-            String response = incomeMessagesHandler.receiveMessage(message, chatId);
-            if (response != null) {
-                sendResponse(message, response);
+
+        Thread thread = new Thread(() -> {
+            logger.debug("new thread started");
+            if (update.hasMessage()) {
+                logger.debug("update has message");
+                try {
+                    Message message = update.getMessage();
+                    Message response = incomeMessagesHandler.receiveMessage(message, chatId);
+
+                    if (response != null) {
+
+                        if (response.getText().contains("video:")) {
+                            logger.debug("MESSAGES HANDLER RESPONSE CONTAINS PATH TO VIDEO! {}", response.getText());
+                            sendResponseVideo(message, response);
+                        } else {
+                            logger.debug("msg hndl response containts text");
+                            sendResponse(message, response);
+                        }
+                    }
+                } catch (Exception e) {
+                    logger.error("error in onUpdateReceived: ", e);
+                }
             }
-        } catch (Exception e) {
-            logger.error("erroe: ", e);
-        }
+        });
+        thread.start();
+
 
     }
 
-    public void sendResponse(Message msg, String text) {
+    public void sendResponse(Message incomeMessage, Message response) {
 
         logger.debug("message sending invoked");
         SendChatAction sendChatAction = new SendChatAction();
         sendChatAction.setAction(ActionType.TYPING);
-        sendChatAction.setChatId(String.valueOf(msg.getChatId()));
+        sendChatAction.setChatId(String.valueOf(incomeMessage.getChatId()));
 
         SendMessage message2Send = new SendMessage();
-        message2Send.setChatId(String.valueOf(msg.getChatId()));
-        message2Send.setText(text);
-        message2Send.setReplyToMessageId(msg.getMessageId());
+        message2Send.setChatId(String.valueOf(incomeMessage.getChatId()));
+        message2Send.setText(response.getText());
+        message2Send.setReplyToMessageId(incomeMessage.getMessageId());
         try {
             logger.debug("executing typing emulation...");
             execute(sendChatAction); //делает вид что печатает
@@ -109,6 +140,35 @@ public class bot extends TelegramLongPollingBot {
         } catch (TelegramApiException e) {
             logger.error("error in message sending: ", e);
 
+        }
+    }
+
+
+    public void sendResponseVideo(Message msg, Message processedResponse) {
+        logger.debug("sending video response");
+        SendChatAction sendChatAction = new SendChatAction();
+        sendChatAction.setAction(ActionType.RECORDVIDEO);
+        sendChatAction.setChatId(String.valueOf(msg.getChatId()));
+        try {
+            execute(sendChatAction);
+        } catch (Exception e) {
+            logger.error("error in trying to send chat action: {}", e);
+        }
+        logger.debug("video uploading emulation executed successfully");
+
+        logger.debug("starting video sending");
+        SendVideo SendVideo = new SendVideo();
+        SendVideo.setChatId(chatId);
+        logger.debug("video path set to: {}", processedResponse.getText().substring(processedResponse.getText().indexOf(" ") + 1));
+        SendVideo.setVideo(new InputFile(new File(processedResponse.getText().substring(processedResponse.getText().indexOf(" ") + 1))));
+        logger.debug("setVideo ok");
+
+        try {
+            logger.debug("executing video");
+            execute(SendVideo);
+            logger.debug("executing video - success");
+        } catch (TelegramApiException e) {
+            logger.debug("error on executing video: {}", e);
         }
     }
 
