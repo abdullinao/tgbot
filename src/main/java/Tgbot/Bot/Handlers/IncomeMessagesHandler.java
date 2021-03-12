@@ -36,63 +36,77 @@ public class IncomeMessagesHandler extends bot {
     }
     //тут инжект кончается
 
-    public String receiveMessage(Message message, String targetChatID) {
+    public Message receiveMessage(Message messageIncome, String targetChatID) {
+        Message response = new Message();
         try {
-            logger.debug("extracted message: {}", message);
+
+            logger.debug("extracted message: {}", messageIncome);
             /*бот работает только в 1 чате, по-этому дополнительно проверяем что чатайди = заданому чат айди. */
-            if (message != null && message.hasText() && String.valueOf(message.getChatId()).equals(targetChatID) ||
-                    message.getForwardFrom().getId() != null) {
+            if (messageIncome != null && messageIncome.hasText() && String.valueOf(messageIncome.getChatId()).equals(targetChatID) ||
+                    messageIncome.getForwardFrom().getId() != null) {
                 logger.debug("first IF in onUpdateReceived method passed");
                 logger.debug("starting checkUserInBD(message) method");
-                checkUserInBD(message);
+                checkUserInBD(messageIncome);
                 try {
-                    String incomeMessage = message.getText().toLowerCase(Locale.ROOT);
+                    String incomeMessage = messageIncome.getText().toLowerCase(Locale.ROOT);
 
                     if (incomeMessage.equals("/help")) {
                         logger.debug("/help command execution");
-                        return commandsUtils.UTILhelpText;
+                        response.setText(commandsUtils.UTILhelpText);
+                        return response;
 
                     } else if (incomeMessage.equals("/top")) {
                         logger.debug("/top command execution");
-                        return commandsHandler.topCommand();
+                        response.setText(commandsHandler.topCommand());
+                        return response;
+
 
                     } else if (incomeMessage.equals("/all")) {
                         logger.debug("/all command execution");
                         logger.debug("/all execution completed");
-                        return commandsHandler.allCommand();
+                        response.setText(commandsHandler.allCommand());
+                        return response;
 
                     } else if (incomeMessage.contains("плюс реп")) {
                         logger.debug("плюс реп command execution");
-                        return commandsHandler.changeRepCommand(message, 1);
+                        response.setText(commandsHandler.changeRepCommand(messageIncome, 1));
+                        return response;
 
                     } else if (incomeMessage.contains("минус реп")) {
                         logger.debug("минус реп command execution");
-                        return commandsHandler.changeRepCommand(message, 0);
+                        response.setText(commandsHandler.changeRepCommand(messageIncome, 0));
+                        return response;
 
                     } else if (incomeMessage.contains("/rand")) {
                         logger.debug("/rand executed");
-                        return commandsHandler.randomCommand(message);
+                        response.setText(commandsHandler.randomCommand(messageIncome));
+                        return response;
 
                     } else if (incomeMessage.equals("/курс")) {
                         logger.debug("/курс command execution");
-                        return commandsHandler.getCourse();
-                    }
-                    else if (incomeMessage.contains(".webm")){
+                        response.setText(commandsHandler.getCourse());
+                        return response;
+
+                    } else if (incomeMessage.contains(".webm")) {
                         logger.debug("WEBM DETECTED");
-                        return webmHandler.processVideo(message);
-                    }
-                    else if (incomeMessage.equals("/ping")){
+                        response.setText(webmHandler.processVideo(messageIncome));
+                        return response;
+
+                    } else if (incomeMessage.equals("/ping")) {
                         logger.debug("ping");
-                        return "pong";
+                        response.setText("pong");
+                        return response;
                     }
 
                 } catch (Exception e) {
                     logger.error("error in first IF onUpdateReceived: ", e);
-                    return "error in first IF onUpdateReceived: " + e.toString();
+                    response.setText("error in first IF onUpdateReceived: " + e.toString());
+                    return response;
                 }
             } else {
                 logger.warn("this chat cant be used with bot.");
-                return UTILwrongChat;
+                response.setText(UTILwrongChat);
+                return response;
             }
         } catch (Exception e) {
             logger.error("error in onUpdateReceived method: ", e);

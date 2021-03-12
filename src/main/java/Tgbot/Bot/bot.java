@@ -58,10 +58,6 @@ public class bot extends TelegramLongPollingBot {
     public bot() {
     }
 
-    //public bot() {}
-
-    //todo webm 2 mp4
-
     //https://core.telegram.org/bots/api#update
 
     public void initMethod() {
@@ -83,28 +79,38 @@ public class bot extends TelegramLongPollingBot {
 
         try {
             Message message = update.getMessage();
-            String response = incomeMessagesHandler.receiveMessage(message, chatId);
+
+            Message response = incomeMessagesHandler.receiveMessage(message, chatId);
+
             if (response != null) {
-               // sendResponse(message, response);
-                sendResponseVideo(message,response);
+
+                if (response.getText().contains("video:")) {
+                    logger.debug("MESSAGES HANDLER RESPONSE CONTAINS PATH TO VIDEO! {}", response.getText());
+                    sendResponseVideo(message, response);
+                } else {
+                    logger.debug("msg hndl response containts text");
+                    sendResponse(message, response);
+                }
+
+
             }
         } catch (Exception e) {
-            logger.error("erroe: ", e);
+            logger.error("error in onUpdateReceived: ", e);
         }
 
     }
 
-    public void sendResponse(Message msg, String text) {
+    public void sendResponse(Message incomeMessage, Message response) {
 
         logger.debug("message sending invoked");
         SendChatAction sendChatAction = new SendChatAction();
         sendChatAction.setAction(ActionType.TYPING);
-        sendChatAction.setChatId(String.valueOf(msg.getChatId()));
+        sendChatAction.setChatId(String.valueOf(incomeMessage.getChatId()));
 
         SendMessage message2Send = new SendMessage();
-        message2Send.setChatId(String.valueOf(msg.getChatId()));
-        message2Send.setText(text);
-        message2Send.setReplyToMessageId(msg.getMessageId());
+        message2Send.setChatId(String.valueOf(incomeMessage.getChatId()));
+        message2Send.setText(response.getText());
+        message2Send.setReplyToMessageId(incomeMessage.getMessageId());
         try {
             logger.debug("executing typing emulation...");
             execute(sendChatAction); //делает вид что печатает
@@ -120,22 +126,31 @@ public class bot extends TelegramLongPollingBot {
     }
 
 
-    public void sendResponseVideo(Message msg, String videoName) {
+    public void sendResponseVideo(Message msg, Message processedResponse) {
+        logger.debug("sending video response");
+        SendChatAction sendChatAction = new SendChatAction();
+        sendChatAction.setAction(ActionType.RECORDVIDEO);
+        sendChatAction.setChatId(String.valueOf(msg.getChatId()));
+        try {
+            execute(sendChatAction);
+        } catch (Exception e) {
+            logger.error("error in trying to send chat action: {}", e);
+        }
+        logger.debug("video uploading emulation executed successfully");
 
-
-        // Create send method
+        logger.debug("starting video sending");
         SendVideo SendVideo = new SendVideo();
-        // Set destination chat id
         SendVideo.setChatId(chatId);
-        // Set the photo file as a new photo (You can also use InputStream with a constructor overload)
-        SendVideo.setVideo(new InputFile(new File(videoName)));
+        logger.debug("video path set to: {}", processedResponse.getText().substring(processedResponse.getText().lastIndexOf(": ")));
+        SendVideo.setVideo(new InputFile(new File("/" + processedResponse.getText().substring(processedResponse.getText().indexOf(" ") + 1))));
+        logger.debug("setVideo ok");
 
         try {
-            // Execute the method
+            logger.debug("executing video");
             execute(SendVideo);
-
+            logger.debug("executing video - success");
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            logger.debug("error on executing video: {}", e);
         }
     }
 

@@ -30,7 +30,9 @@
         <property name="cryptoKey" value="${crypto.cryptoCompareKey}"/>
         <property name="userService" ref="userService"/>
     </bean>
-    <bean id="webmHandler" class="Tgbot.Bot.Handlers.VideoHandler.webmHandler" > </bean>
+    <bean id="webmHandler" class="Tgbot.Bot.Handlers.VideoHandler.webmHandler">
+        <property name="apiURL" value="${webm.apiURL}"/>
+    </bean>
 
 
     <!--dao services-->
