@@ -13,7 +13,7 @@ import java.util.Locale;
 
 import static Tgbot.Bot.Utils.commandsUtils.UTILwrongChat;
 
-public class IncomeMessagesHandler extends bot {
+public class IncomeMessagesHandler  {
 
     private final Logger logger = LoggerFactory.getLogger(IncomeMessagesHandler.class);
 

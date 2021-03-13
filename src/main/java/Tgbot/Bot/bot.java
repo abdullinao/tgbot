@@ -119,19 +119,26 @@ public class bot extends TelegramLongPollingBot {
     }
 
     public void sendResponse(Message incomeMessage, Message response) {
-
         logger.debug("message sending invoked");
-        SendChatAction sendChatAction = new SendChatAction();
-        sendChatAction.setAction(ActionType.TYPING);
-        sendChatAction.setChatId(String.valueOf(incomeMessage.getChatId()));
+        try {
+            SendChatAction sendChatAction = new SendChatAction();
+            sendChatAction.setAction(ActionType.TYPING);
+            sendChatAction.setChatId(String.valueOf(incomeMessage.getChatId()));
+            logger.debug("executing typing emulation...");
+            execute(sendChatAction); //делает вид что печатает
+        } catch (TelegramApiException e) {
+            logger.error("error in message sending: ", e);
+
+        }
+
 
         SendMessage message2Send = new SendMessage();
         message2Send.setChatId(String.valueOf(incomeMessage.getChatId()));
         message2Send.setText(response.getText());
         message2Send.setReplyToMessageId(incomeMessage.getMessageId());
+        message2Send.setParseMode("HTML");
         try {
-            logger.debug("executing typing emulation...");
-            execute(sendChatAction); //делает вид что печатает
+
             logger.debug("message to send: {}", message2Send);
             logger.debug("executing sending...");
 
