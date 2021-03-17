@@ -100,8 +100,8 @@ public class IncomeMessagesHandler  {
 
                 } catch (Exception e) {
                     logger.error("error in first IF onUpdateReceived: ", e);
-                    response.setText("error in first IF onUpdateReceived: " + e.toString());
-                    return response;
+                 //  response.setText("error in first IF onUpdateReceived: " + e.toString());
+                    return null;
                 }
             } else {
                 logger.warn("this chat cant be used with bot.");
